@@ -23,7 +23,7 @@ int main()
 	{
 		int id = pool.getConn();
 		cout<<"get Handle"<<id<<endl;
-//		pool.releaseConn(id);
+		pool.releaseConn(id);
 		sleep(1);
 	}
 	return 0;
