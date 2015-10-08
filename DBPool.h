@@ -17,22 +17,24 @@ using namespace std;
 
 namespace MyNameSpace
 {
-	struct DBConnInfo
-	{
-		string host;	
-		string user;
-		string passwd;
-		string dbName;
-		int port;
-	};
 	class MyDBConn;
 	class DBPool
 	{
 		public:
-			DBPool(DBConnInfo & info) : connInfo(info), MAX_CONN_COUNT(100)
-		{
+			struct DBConnInfo
+			{
+				string host;	
+				string user;
+				string passwd;
+				string dbName;
+				int port;
+			};
 
-		}
+		public:
+			DBPool(DBConnInfo & info) : connInfo(info), MAX_CONN_COUNT(100)
+			{
+
+			}
 			void setConnInfo(DBConnInfo & info)
 			{
 				connInfo = info;

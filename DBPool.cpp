@@ -11,6 +11,8 @@
 #include "MyTime.h"
 #include "MyLock.h"
 #include "DBPool.h"
+#include <unistd.h>
+
 using namespace std;
 namespace MyNameSpace
 {
@@ -23,7 +25,7 @@ namespace MyNameSpace
 				CONN_USING,
 				CONN_VALID,
 			};
-			MyDBConn(DBConnInfo &info) : connInfo(info), timeout(5), 
+			MyDBConn(DBPool::DBConnInfo &info) : connInfo(info), timeout(5), 
 			mysql(NULL), myId(0), connStatus(CONN_INVALID),
 			threadId(0)
 		{
@@ -56,11 +58,13 @@ namespace MyNameSpace
 			void getConn()
 			{
 				threadId = pthread_self();
+				cout<<"get ("<<threadId<<":"<<myId<<")"<<endl;
 				connStatus = CONN_USING;
 				myTime.now();
 			}
 			void releaseConn()
 			{
+				cout<<"release ("<<threadId<<":"<<myId<<")"<<endl;
 				threadId = 0;
 				connStatus = CONN_VALID;
 			}
@@ -93,7 +97,7 @@ namespace MyNameSpace
 					return false;
 				}
 				mysql_options(mysql, MYSQL_OPT_READ_TIMEOUT, (const char *)&timeout);
-				mysql_options(mysql, MYSQL_OPT_READ_TIMEOUT, (const char *)&timeout);
+				mysql_options(mysql, MYSQL_OPT_WRITE_TIMEOUT, (const char *)&timeout);
 				if (!mysql_real_connect(mysql, connInfo.host.c_str(), connInfo.user.c_str(), connInfo.passwd.c_str(), connInfo.dbName.c_str(), connInfo.port, 0, 0))
 				{
 					cerr<<"mysql connect error:"<<mysql_error(mysql)<<endl;
@@ -108,7 +112,7 @@ namespace MyNameSpace
 			}
 		private:
 			static int connId;
-			DBConnInfo connInfo;
+			DBPool::DBConnInfo connInfo;
 			const int timeout;
 			MYSQL *mysql;
 			int myId;

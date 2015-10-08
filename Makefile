@@ -1,5 +1,5 @@
 test : test.o DBPool.o
-	g++ -g -o test test.o DBPool.o -lmysqlclient
+	g++ -std=c++11 -g -o test test.o DBPool.o -lmysqlclient -lpthread
 
 test.o : test.cpp
 	g++ -c -g test.cpp
