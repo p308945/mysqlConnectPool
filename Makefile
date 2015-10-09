@@ -1,11 +1,13 @@
+CPPFLAGS = -std=c++11 -Wall -g -gstabs
+.PHONY : test clean
 test : test.o DBPool.o
-	g++ -std=c++11 -g -o test test.o DBPool.o -lmysqlclient -lpthread
+	g++ $(CPPFLAGS) -o test test.o DBPool.o -lmysqlclient -lpthread
 
-test.o : test.cpp
-	g++ -c -g test.cpp
+test.o : test.cpp DBDefine.h
+	g++ $(CPPFLAGS) -c test.cpp
 
-DBPool.o : DBPool.cpp
-	g++ -c -g DBPool.cpp 
+DBPool.o : DBPool.cpp DBPool.h MyTime.h MyLock.h
+	g++ $(CPPFLAGS) -c DBPool.cpp 
 
 clean:
-	rm test test.o DBPool.o
+	rm -rf test test.o DBPool.o
