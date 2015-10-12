@@ -20,6 +20,7 @@
 #define __DBDEFINE_H__
 
 #include "DBPool.h"
+#include <type_traits>
 
 using namespace MyNameSpace;
 
@@ -32,11 +33,13 @@ const dbCol test_db_define[] =
 	{NULL ,		DB_DATA_TYPE::DB_INVALID, 	0, NULL}
 };
 */
+
 struct testDataStruct
 {
 	uint64_t userId;
 	char name[32];
 	unsigned char isOk;
-}__attribute__ ((packed));
+} __attribute__ ((packed));
+
 
 #endif

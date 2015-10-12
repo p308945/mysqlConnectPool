@@ -493,7 +493,7 @@ namespace MyNameSpace
 				}
 				else
 				{
-					return (0 == execSql("SET AUTOCOMMIT = 1", ::strlen("SET AUTOCOMMIT = 0")));
+					return (0 == execSql("SET AUTOCOMMIT = 1", ::strlen("SET AUTOCOMMIT = 1")));
 				}
 			}
 
@@ -715,6 +715,9 @@ namespace MyNameSpace
 				}
 				mysql_options(mysql, MYSQL_OPT_READ_TIMEOUT, (const char *)&timeout);
 				mysql_options(mysql, MYSQL_OPT_WRITE_TIMEOUT, (const char *)&timeout);
+
+				int opt = 1;
+				mysql_options(mysql, MYSQL_OPT_RECONNECT, (char *)&opt);
 				if (!mysql_real_connect(mysql, connInfo.host.c_str(), connInfo.user.c_str(), connInfo.passwd.c_str(), connInfo.dbName.c_str(), connInfo.port, 0, 0))
 				{
 					std::cerr<<"mysql connect error:"<<mysql_error(mysql)<<std::endl;

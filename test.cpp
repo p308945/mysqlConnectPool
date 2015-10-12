@@ -122,11 +122,6 @@ void* funSelect(void *arg)
 	MyNameSpace::DBPool * pool = (MyNameSpace::DBPool *)arg;
 	int id = pool->getConn();
 //	std::cout<<"pthread :"<<pthread_self()<<"get Handle:"<<id<<"......operate db in here!"<<std::endl;
-	testDataStruct *data = NULL;
-	std::cout<<sizeof(testDataStruct)<<std::endl;
-/*	testDataStruct data;
-	memset(&data, 0x00, sizeof(data));
-*/
 	const dbCol column[] = 
 	{
 		{"USERID",  DB_DATA_TYPE::DB_ULONG,     8, NULL},
@@ -134,21 +129,30 @@ void* funSelect(void *arg)
 		{"ISOK",    DB_DATA_TYPE::DB_UCHAR,     1, NULL},
 		{NULL ,     DB_DATA_TYPE::DB_INVALID,   0, NULL}
 	};
+//	std::cout<<sizeof(testDataStruct)<<std::endl;
 	uint32_t retCount = 0;
+#define SELECT_LIMIT
+#ifdef SELECT_LIMIT
+	testDataStruct data;
+	memset(&data, 0x00, sizeof(data));
+	retCount = pool->execSelectLimit(id, "USERINFO", column, NULL, NULL, 1, (unsigned char *)&data, 1);
+#else
+	testDataStruct *data = NULL;
 	retCount = pool->execSelect(id, "USERINFO", column, NULL, NULL, (unsigned char **)&data);
-//	retCount = pool->execSelectLimit(id, "USERINFO", column, NULL, NULL, 1, (unsigned char *)&data, 1);
+#endif
+
 	if ((uint32_t)-1 == retCount)
 	{
 		std::cout<<"execSelect error"<<std::endl;
 	}
 	else
 	{
-		/*
+#ifdef SELECT_LIMIT
 		std::cout<<"userid: "<<data.userId<<std::endl;
 		std::cout<<"name: "<<data.name<<std::endl;
 		std::cout<<"isOk: "<<data.isOk<<std::endl;
-		*/
-
+		
+#else
 		for (uint32_t i = 0; i < retCount; ++i)
 		{
 			std::cout<<"userid: "<<data[i].userId<<std::endl;
@@ -156,6 +160,7 @@ void* funSelect(void *arg)
 			std::cout<<"isOk: "<<data[i].isOk<<std::endl;
 		}
 		delete [] data;
+#endif
 	}
 	sleep(2);
 	pool->releaseConn(id);

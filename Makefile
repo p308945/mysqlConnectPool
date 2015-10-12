@@ -10,4 +10,6 @@ DBPool.o : DBPool.cpp DBPool.h MyTime.h MyLock.h
 	g++ $(CPPFLAGS) -c DBPool.cpp 
 
 clean:
-	rm -rf test test.o DBPool.o
+	rm -rf test
+	rm -rf test.o
+	rm -rf DBPool.o
