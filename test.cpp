@@ -133,9 +133,10 @@ void* funSelect(void *arg)
 	uint32_t retCount = 0;
 #define SELECT_LIMIT
 #ifdef SELECT_LIMIT
-	testDataStruct data;
-	memset(&data, 0x00, sizeof(data));
-	retCount = pool->execSelectLimit(id, "USERINFO", column, NULL, NULL, 1, (unsigned char *)&data, 1);
+#define SELECT_COUNT 10
+	testDataStruct data[SELECT_COUNT];
+	memset(data, 0x00, sizeof(data));
+	retCount = pool->execSelectLimit(id, "USERINFO", column, NULL, NULL, SELECT_COUNT, (unsigned char *)data);
 #else
 	testDataStruct *data = NULL;
 	retCount = pool->execSelect(id, "USERINFO", column, NULL, NULL, (unsigned char **)&data);
@@ -148,10 +149,12 @@ void* funSelect(void *arg)
 	else
 	{
 #ifdef SELECT_LIMIT
-		std::cout<<"userid: "<<data.userId<<std::endl;
-		std::cout<<"name: "<<data.name<<std::endl;
-		std::cout<<"isOk: "<<data.isOk<<std::endl;
-		
+		for (uint32_t i = 0; i < SELECT_COUNT; ++i)
+		{
+			std::cout<<"userid: "<<data[i].userId<<std::endl;
+			std::cout<<"name: "<<data[i].name<<std::endl;
+			std::cout<<"isOk: "<<data[i].isOk<<std::endl;
+		}
 #else
 		for (uint32_t i = 0; i < retCount; ++i)
 		{
