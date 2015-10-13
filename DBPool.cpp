@@ -489,11 +489,11 @@ namespace MyNameSpace
 			{
 				if (bSupportTransactions)
 				{
-					return (0 == execSql("SET AUTOCOMMIT = 0", ::strlen("SET AUTOCOMMIT = 0")));
+					return (0 == execSql(withTransactionsCmd.c_str(), withTransactionsCmd.length()));
 				}
 				else
 				{
-					return (0 == execSql("SET AUTOCOMMIT = 1", ::strlen("SET AUTOCOMMIT = 1")));
+					return (0 == execSql(withoutTransactionsCmd.c_str(), withoutTransactionsCmd.length()));
 				}
 			}
 
@@ -740,7 +740,11 @@ namespace MyNameSpace
 			pthread_t threadId;
 			MyTime myTime;
 			bool supportTransactions;
+			static const std::string withoutTransactionsCmd;
+			static const std::string withTransactionsCmd;
 	};
+	const std::string MyDBConn::withoutTransactionsCmd = "SET AUTOCOMMIT = 1";
+	const std::string MyDBConn::withTransactionsCmd = "SET AUTOCOMMIT = 0";
 
 	int MyDBConn::connId = 0; 
 
