@@ -26,7 +26,7 @@ namespace MyNameSpace
 				CONN_USING,
 				CONN_VALID,
 			};
-			MyDBConn(DBPool::DBConnInfo &info) : connInfo(info), timeout(5), 
+			MyDBConn(DBPool::DBConnInfo &info) : connInfo(info), timeout(20), 
 			mysql(NULL), myId(0), connStatus(CONN_INVALID),
 			threadId(0), supportTransactions(false)
 		{
@@ -101,7 +101,7 @@ namespace MyNameSpace
 				int ret = mysql_real_query(mysql, sql, sqlLen);
 				if (0 != ret)
 				{
-					std::cerr<<__FUNCTION__<<": "<<__LINE__<<"sql exec error"<<std::endl;
+					std::cerr<<__FUNCTION__<<": "<<__LINE__<<"sql exec error: "<<sql<<std::endl;
 					std::cerr<<mysql_error(mysql)<<std::endl;
 				}
 				return ret;
